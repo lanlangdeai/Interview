@@ -1,0 +1,10 @@
+一些常见SQL操作
+
+1.大数据(百万,千万级)进行分页处理
+	原始: select id,name,pid from test where pid=1 order by id limit 1000000,10;
+	优化: 建立联合索引idx_id(pid,id) 根据where后面的字段和limit的字段建立索引
+		1) 子查询
+		SELECT id,name,pid FROM test WHERE id > (SELECT id FROM test WHERE pid=1 ORDER BY id LIMIT 1000000,1) LIMIT 10;
+		2) 关联查询
+		SELECT a.id, a.name, a.pid FROM test a JOIN (SELECT id FROM test WHERE pid=1 ORDER BY id LIMIT 1000000,10) b ON a.id = b.id;
+

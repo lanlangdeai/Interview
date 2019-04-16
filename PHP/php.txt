@@ -93,3 +93,67 @@ PHP相关问答
 			II)保存到数据库中，这种方式的扩展性很强，可以随意增加WEB而不受影响。放在数据库里面安全方面好。
 			III)可以将session数据保存在memcached，redis之类内存数据库中，memcached是基于内存存储数据的，性能很高，用户并发量很大的时候尤其合适
 			
+8.如何记录PHP的错误信息？
+	php.ini的相关配置项，这两个配置项为：
+
+参数					配置项				说明
+
+log_errors      	On/off              是否开启日志记录
+
+log_errors_max_len  整型，默认1024     	单行错误最大记录长度
+
+error_log			syslog或者指定路径		错误日志记录在什么地方
+
+
+9.PHP中的错误级别？
+    Deprecated 最低级别错误，程序继续执行
+
+　  Notice 通知级别的错误 如直接使用未声明变量，程序继续执行
+
+　  Warning 警告级别的错误，可能得不到想要的结果
+
+　  Fatal error  致命级别错误致命级别错误，程序不往下执行
+
+　  parse error 语法解析错误，最高级别错误，连其他错误信息也不呈现出来
+
+　  E_USER_相关错误 用户设置的相关错误
+
+10.PHP-fpm配置调优？
+
+pm = dynamic; 表示使用哪种进程数量管理方式
+
+　　　　dynamic表示php-fpm进程数是动态的，最开始是pm.start_servers指定的数量，如果请求较多，则会自动增加，保证空闲的进程数不小于pm.min_spare_servers，如果进程数较多，也会进行相应清理，保证多余的进程数不多于pm.max_spare_servers
+
+　　　　static表示php-fpm进程数是静态的, 进程数自始至终都是pm.max_children指定的数量，不再增加或减少
+
+　　pm.max_children = 300; 静态方式下开启的php-fpm进程数量
+　　pm.start_servers = 20; 动态方式下的起始php-fpm进程数量
+　　pm.min_spare_servers = 5; 动态方式下的最小php-fpm进程数量
+　　pm.max_spare_servers = 35; 动态方式下的最大php-fpm进程数量
+
+　　　　如果pm为static, 那么其实只有pm.max_children这个参数生效。系统会开启设置数量的php-fpm进程
+
+　　　　如果pm为dynamic, 那么pm.max_children参数失效，后面3个参数生效。系统会在php-fpm运行开始的时候启动pm.start_servers个php-fpm进程，然后根据系统的需求动态在pm.min_spare_servers和pm.max_spare_servers之间调整php-fpm进程数
+	例如，命令strace -o out.txt -T -tt -e trace=all -p 2899表示跟踪2899进程的所有系统调用，并统计系统调用的时间开销，以及调用起始时间(以可视化的时分秒格式显示)，最后将记录结果存入out.txt文件。
+
+pm.max_requests = 10240; 
+发送多少个请求后会重启该线程。最大处理请求数是指一个php-fpm的worker进程在处理多少个请求后就终止掉，master进程会重新respawn一个新的。
+这个配置的主要目的是避免php解释器或程序引用的第三方库造成的内存泄露。
+
+max_execution_time
+request_terminate_timeout = 30; 脚本最大执行时间
+
+
+11.对于PHP性能进行监控
+开启xdebug的性能监控功能
+
+
+12.排查PHP-fpm占用CPU过高
+php-fmp.conf中开启错误日志，慢执行日志还有常规日志
+使用strace工具进行性能分析
+	例如，命令strace -o out.txt -T -tt -e trace=all -p 2899表示跟踪2899进程的所有系统调用，并统计系统调用的时间开销，以及调用起始时间(以可视化的时分秒格式显示)，最后将记录结果存入out.txt文件。
+
+
+
+
+

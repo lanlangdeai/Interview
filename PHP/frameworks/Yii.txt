@@ -1,0 +1,26 @@
+
+// 有关yii框架考点
+
+1. Yii1 和Yii2的区别？
+	1.在Yii2.0中已经使用Comsoper来管理各种依赖关系，你在安装的时候完全可以用composer来进行安装 
+	2.在Yii 2.0中还增加了一个安全事件用来把控应用的安全，你可以像下面的示例一样轻松使用：
+
+		Yii::$app->security->encrypt()
+	3.事务管理 
+		对于事物管理，最大的变化就是你可以在事物中使用回调函数了：
+
+		$connection->transaction(function() {
+    		$order = new Order($customer);    
+    		$order->save();   
+     		$order->addItems($items);
+		});
+	另外，Yii 2.0中还为事物管理定义一些新的事件以使得你可以在事物的生命周期内更好的控制事物的整个过程，像beginTransaction 和 commitTransaction 就是这样的事件，分别在开始事物和提交事物的时候触发。 
+	4.Yii2引入了资源包的概念，资源引用的方式变化较大。 
+		有两种方式引入资源，一种是通过assets目录下的AppAsset类，还有就是通过类似Yii1种的注册方法。 
+	5.Yii2在视图层的一个显著改变是引入了视图类，这样在MVC模式实现上更为完整。 类似主题等不同的配置 相应的，相关展现层附属类就由新的视图类来接手管理，比如theme：
+
+2. Yii 如何实现连表查询？
+	使用查询构造器 leftJoin  rightJoin Join
+
+
+
